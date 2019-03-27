@@ -16,7 +16,26 @@ namespace Senior_Project
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new welcome_form());
+
+            //--------------------------------------------//
+            //Debug -> choose to run one form or the other |
+            //--------------------------------------------//
+            //Application.Run(new App());
+            Application.Run(new Welcome_Form());
+
+
+
+            //string filename = "startup.txt";
+            //if (!System.IO.File.Exists(filename))
+            //{
+            //    System.IO.File.WriteAllText(filename, "1");
+            //    Application.Run(new Welcome_Form());
+            //}
+            //else
+            //{
+            //    Application.Run(new App());
+            //}
+
         }
     }
 }

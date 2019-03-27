@@ -1,6 +1,6 @@
 ﻿namespace Senior_Project
 {
-    partial class welcome_form
+    partial class Welcome_Form
     {
         /// <summary>
         /// Required designer variable.
@@ -51,6 +51,7 @@
             this.create_button.TabIndex = 1;
             this.create_button.Text = "Create from scratch";
             this.create_button.UseVisualStyleBackColor = true;
+            this.create_button.Click += new System.EventHandler(this.Create_Button_Click);
             // 
             // label1
             // 
@@ -61,7 +62,6 @@
             this.label1.Size = new System.Drawing.Size(631, 34);
             this.label1.TabIndex = 2;
             this.label1.Text = "Welcome to the Student Administration Panel! \r\n";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
