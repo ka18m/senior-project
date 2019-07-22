@@ -10,29 +10,34 @@ namespace Senior_Project
     class ModelView
     {
 
-        //Populate the student 
-        public static void PopulateStudents()
-        {
-            //Get number of students
-            //form.numberOfStudents
-            //Generate form with that number of boxes for inputting student data
-            //form.boxes that ask for names, current reading level and goal reading level
-            //Verify data
+          //Populate the student 
+          public static void PopulateStudents()
+          {
+               //Get number of students
+               //form.numberOfStudents
+               //Generate form with that number of boxes for inputting student data
+               //form.boxes that ask for names, current reading level and goal reading level
+               //Verify data
 
-            //Create connection
-            SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=Students.sqlite;Version=3;");
-            m_dbConnection.Open();
+               //Create connection
+               SQLiteConnection m_dbConnection = new SQLiteConnection("Data Source=Students.sqlite;Version=3;");
+               m_dbConnection.Open();
 
-            //Read all data into database -> model.inputData
+               
 
-            //Close connection
-            m_dbConnection.Close(); 
-        }
+               //Close connection
+               m_dbConnection.Close(); 
+          }
 
-        //Populate profile
-        public static void PopulateProfile()
-        {
+          //Populate profile
+          public static void PopulateProfile()
+          {
             
-        }
+          }
+
+          public static void Add_Student()
+          {
+
+          }
     }
 }
