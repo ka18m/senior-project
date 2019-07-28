@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
+using System.IO;
 
 namespace Senior_Project
 {
@@ -26,7 +27,7 @@ namespace Senior_Project
 
           private void Import_Button_Click(object sender, EventArgs e)
           {
-
+               IO.Import();
           }
      }
 }
