@@ -13,6 +13,7 @@ namespace Senior_Project
           /// </summary>
 
           public static int student_counter;
+          public static int note_counter;
 
         [STAThread]
         static void Main()
@@ -20,23 +21,23 @@ namespace Senior_Project
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+               string filename = "startup.txt";
+               if (!System.IO.File.Exists(filename))
+               {
+                    System.IO.File.WriteAllText(filename, "1");
+                    System.IO.Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\HomeroomHelper");
+                    Database_Interface.CreateDB();
+                    student_counter = 0;
+                    note_counter = 0;
+                    Application.Run(new Welcome_Form());
+               }
+               else
+               {
+                    student_counter = Database_Interface.QueryNumStudents();
+                    note_counter = Database_Interface.QueryNumNotes();
+                    Application.Run(new App());
+               }
 
-
-
-
-
-               //string filename = "startup.txt";
-               //if (!System.IO.File.Exists(filename))
-               //{
-               //    System.IO.File.WriteAllText(filename, "1");
-                     Database_Interface.CreateDB();
-               //    Application.Run(new Welcome_Form());
-               //}
-               //else
-               //{
-               //    Application.Run(new App());
-               //}
-               student_counter = Database_Interface.QueryNumStudents();
 
 
                //--------------------------------------------//
@@ -44,7 +45,7 @@ namespace Senior_Project
                //--------------------------------------------//
 
                //Application.Run(new App());
-               Application.Run(new Class_Form());
+               //Application.Run(new App());
           }
     }
 }
