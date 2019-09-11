@@ -13,6 +13,7 @@ namespace Senior_Project
           public int student_id;
           public string date;
           public string note;
+          public string category; 
 
           public static int Generate_Note_ID()
           {

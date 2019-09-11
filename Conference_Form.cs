@@ -17,14 +17,14 @@ namespace Senior_Project
                InitializeComponent();
 
                //Load ComboBox
-               List<string> names = Database_Interface.QueryStudentNames();
+               List<string> names = Database_Interface.Query_Student_Names();
                foreach (string name in names)
                student_select.Items.Add(name);
           }
 
           private int current_student_id; //Changes when selection changes
 
-          private void home_button_Click(object sender, EventArgs e)
+          private void Home_Button_Click(object sender, EventArgs e)
           {
                this.Close();
           }
@@ -36,7 +36,7 @@ namespace Senior_Project
                string[] fullname = name.Split(' ');
 
                //MessageBox.Show(fullname[0] + " " + fullname[1]);
-               current_student_id = Database_Interface.QueryID(fullname[0], fullname[1]);
+               current_student_id = Database_Interface.Query_ID(fullname[0], fullname[1]);
                Refresh_Notes();
 
           }
@@ -47,7 +47,7 @@ namespace Senior_Project
                {
                     if(new_note.ShowDialog() == DialogResult.OK)
                     {
-                         Database_Interface.AddNote(current_student_id, new_note.Note);
+                         Database_Interface.Add_Note(current_student_id, new_note.Note, new Conference_Types(new_note.Category).Type);
                     }
                }
                Refresh_Notes();
@@ -56,7 +56,7 @@ namespace Senior_Project
           private void Refresh_Notes()
           {
                notes.Items.Clear();
-               List<Note> student_notes = Database_Interface.QueryNote(current_student_id);
+               List<Note> student_notes = Database_Interface.Query_Note(current_student_id);
 
                //Display in listview
                foreach (Note n in student_notes)
@@ -80,13 +80,14 @@ namespace Senior_Project
                edit_note.student_id = Convert.ToInt32(item.SubItems[1].Text);
                edit_note.date = item.SubItems[2].Text;
                edit_note.note = item.SubItems[3].Text;
+               edit_note.category = item.SubItems[4].Text;
 
                using (New_Note_Form edit = new New_Note_Form())
                {
                     edit.Note = edit_note.note;
                     if (edit.ShowDialog() == DialogResult.OK)
                     {
-                         Database_Interface.UpdateNote(edit_note.id, edit.Note);
+                         Database_Interface.Update_Note(edit_note.id, edit.Note, new Conference_Types(edit.Category).Type);
                     }
 
                }
@@ -109,8 +110,11 @@ namespace Senior_Project
                edit_note.student_id = Convert.ToInt32(item.SubItems[1].Text);
                edit_note.date = item.SubItems[2].Text;
                edit_note.note = item.SubItems[3].Text;
+               edit_note.category = item.SubItems[4].Text;
 
-               Database_Interface.DeleteNote(edit_note.id);
+               Database_Interface.Delete_Note(edit_note.id);
+
+               Refresh_Notes();
           }
      }
 }

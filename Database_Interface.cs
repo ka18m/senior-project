@@ -11,7 +11,7 @@ namespace Senior_Project
     {
           static SQLiteConnection m_dbConnection= new SQLiteConnection(@"URI=file: D:\Senior Project\Senior_Project\bin\Debug\Students.sqlite;Version=3;");
 
-          public static void CreateDB()
+          public static void Create_DB()
           {
                SQLiteConnection.CreateFile("Students.sqlite"); //Create database
 
@@ -32,7 +32,9 @@ namespace Senior_Project
                command.ExecuteNonQuery();
 
                //Add example student to table 
-               AddStudent("Example", "Student", 'A', 'C', 'E');
+               Add_Student("Example", "Student", 'A', 'C', 'E');
+
+               Program.student_counter = Query_Num_Students();
 
                m_dbConnection.Close();
 
@@ -41,7 +43,7 @@ namespace Senior_Project
                m_dbConnection.Open();
                //Create notes table
 
-               sql = "CREATE TABLE IF NOT EXISTS notes (id INT, student_id INT, date VARCHAR(10), note VARCHAR(500))";
+               sql = "CREATE TABLE IF NOT EXISTS notes (id INT, student_id INT, date VARCHAR(10), note VARCHAR(500), category VARCHAR(30))";
                     
                //Execute sql command on server -> load command
                command = new SQLiteCommand(sql, m_dbConnection);
@@ -50,10 +52,34 @@ namespace Senior_Project
                command.ExecuteNonQuery();
 
                //Add example note to table
-               AddNote(1,  "Example note. You can post up to 500 characters");
+               Add_Note(1,  "Example note. You can post up to 500 characters", "Demonstration");
                
 
                m_dbConnection.Close();
+          }
+
+          public static void Update_Student(Student student)
+          {
+               bool wasOpen = false;
+
+               if (m_dbConnection.State == System.Data.ConnectionState.Closed)
+               {
+                    m_dbConnection.Open();
+                    wasOpen = true;
+               }
+
+               SQLiteCommand sql = m_dbConnection.CreateCommand();
+               sql.CommandText = "UPDATE students SET startingLvl = @SLVL, currentLvl = @CLVL, goalLvl = @GLVL WHERE id = @ID";
+               sql.Parameters.Add("@ID", System.Data.DbType.Int32).Value = student.ID;
+               sql.Parameters.Add("@SLVL", System.Data.DbType.String).Value = student.StartLevel;
+               sql.Parameters.Add("@CLVL", System.Data.DbType.String).Value = student.CurrentLevel;
+               sql.Parameters.Add("@GLVL", System.Data.DbType.String).Value = student.GoalLevel;
+               sql.ExecuteNonQuery();
+
+               if (wasOpen == false)
+               {
+                    m_dbConnection.Close();
+               }
           }
 
           //Add one student to the database
@@ -62,7 +88,7 @@ namespace Senior_Project
           *  output: true if successful, else false
           * 
           */
-          public static bool AddStudent(string firstName, string lastName, char startingLevel, char currentLevel, char goalLevel)  
+          public static void Add_Student(string firstName, string lastName, char startingLevel, char currentLevel, char goalLevel)  
           {
                bool wasOpen = false;
 
@@ -87,20 +113,69 @@ namespace Senior_Project
                     m_dbConnection.Close();
                }
 
-               return true;
+          }
+          public static void Add_Student(Student student)
+          {
+               bool wasOpen = false;
+
+               if (m_dbConnection.State == System.Data.ConnectionState.Closed)
+               {
+                    m_dbConnection.Open();
+                    wasOpen = true;
+               }
+
+               SQLiteCommand sql = m_dbConnection.CreateCommand();
+               sql.CommandText = "INSERT INTO students ( id, fname, lname, startingLvl, currentLvl, goalLvl) VALUES (@ID, @FNAME, @LNAME, @SLVL, @CLVL, @GLVL);";
+               sql.Parameters.Add("@ID", System.Data.DbType.Int32).Value = Student.Generate_Student_ID();
+               sql.Parameters.Add("@FNAME", System.Data.DbType.String).Value = student.FirstName;
+               sql.Parameters.Add("@LNAME", System.Data.DbType.String).Value = student.LastName;
+               sql.Parameters.Add("@SLVL", System.Data.DbType.String).Value = student.StartLevel;
+               sql.Parameters.Add("@CLVL", System.Data.DbType.String).Value = student.CurrentLevel;
+               sql.Parameters.Add("@GLVL", System.Data.DbType.String).Value = student.GoalLevel;
+               sql.ExecuteNonQuery();
+
+               if (wasOpen == false)
+               {
+                    m_dbConnection.Close();
+               }
+          }
+
+          //Deletes all notes associated with a student id
+          public static void Delete_Notes(int student_id)
+          {
+               int note_count = Query_Num_Notes(student_id); //Get number of notes before deleting them
+
+               bool wasOpen = false;
+
+               if (m_dbConnection.State == System.Data.ConnectionState.Closed)
+               {
+                    m_dbConnection.Open();
+                    wasOpen = true;
+               }
+
+               string sql = "DELETE FROM notes WHERE student_id = " + student_id;
+               SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+               command.ExecuteNonQuery();
+
+               if (wasOpen == false)
+               {
+                    m_dbConnection.Close();
+               }
+
+               Program.note_counter -= note_count;
           }
 
           //Add multiple students
-          public static void AddStudents(List<Student> students)
+          public static void Add_Students(List<Student> students)
           {
                foreach(Student s in students)
                {
-                    AddStudent(s.getFirstName(), s.getLastName(), s.getStartLevel(), s.getCurrentLevel(), s.getGoalLevel());
+                    Add_Student(s.FirstName, s.LastName, s.StartLevel, s.CurrentLevel, s.GoalLevel);
                }
           }
 
           //Delete one student
-          public static void DeleteStudent(int id)
+          public static void Delete_Student(int id)
           {
                bool wasOpen = false;
 
@@ -119,11 +194,11 @@ namespace Senior_Project
                     m_dbConnection.Close();
                }
 
-               Program.student_counter -= 1;
+               Program.student_counter = Query_Num_Students();
           }
 
           //Delete tables
-          public static void DeleteAllStudents(List<Student> students)
+          public static void Delete_All_Students()
           {
                bool wasOpen = false;
 
@@ -149,11 +224,12 @@ namespace Senior_Project
                     m_dbConnection.Close();
                }
 
-               Program.student_counter = 0;
+               //Reset DB
+               Create_DB();
           }
 
           //Query all students
-          public static List<Student> QueryAllStudents() 
+          public static List<Student> Query_All_Students() 
           {
                bool wasOpen = false;
 
@@ -186,7 +262,7 @@ namespace Senior_Project
           }
 
           //Query student names
-          public static List<string> QueryStudentNames()
+          public static List<string> Query_Student_Names()
           {
                bool wasOpen = false;
 
@@ -217,8 +293,36 @@ namespace Senior_Project
                return names;
           }
 
+          //Query one student
+          public static Boolean Query_Student_Exist(string firstname, string lastname)
+          {
+               bool wasOpen = false;
+
+               if (m_dbConnection.State == System.Data.ConnectionState.Closed)
+               {
+                    m_dbConnection.Open();
+                    wasOpen = true;
+               }
+
+               //Use SQL to query by reading level
+               string sql = "SELECT * FROM students WHERE fname = '" + firstname + "' AND lname = '" + lastname + "'";
+               SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+               SQLiteDataReader reader = command.ExecuteReader(); //Returns all student names
+
+               //Parse data and create list
+               bool doesExist = false;
+               if (reader.HasRows) { doesExist = true; }             
+
+               if (wasOpen == false)
+               {
+                    m_dbConnection.Close();
+               }
+
+               return doesExist;
+          }
+
           //Query students of a certain reading level
-          public static List<Student> QueryReadingLevel(char readingLevel)
+          public static List<Student> Query_Reading_Level(char readingLevel)
           {
                bool wasOpen = false;
 
@@ -252,7 +356,7 @@ namespace Senior_Project
           }
 
           //Query the number of students in the class
-          public static int QueryNumStudents()  //count number of students stored in db
+          public static int Query_Num_Students()  //count number of students stored in db
           {
                bool wasOpen = false;
 
@@ -279,7 +383,7 @@ namespace Senior_Project
           }
 
           //Add new note
-          public static void AddNote(int student_id, string note)
+          public static void Add_Note(int student_id, string note, string category)
           {
                bool wasOpen = false;
 
@@ -290,11 +394,12 @@ namespace Senior_Project
                }
 
                SQLiteCommand sql = m_dbConnection.CreateCommand();
-               sql.CommandText = "INSERT INTO notes (id, student_id, date, note) VALUES (@ID, @STUDENT_ID, @DATE, @NOTE);";
+               sql.CommandText = "INSERT INTO notes (id, student_id, date, note) VALUES (@ID, @STUDENT_ID, @DATE, @NOTE, @CAT);";
                sql.Parameters.Add("@ID", System.Data.DbType.Int32).Value = Note.Generate_Note_ID();
                sql.Parameters.Add("@STUDENT_ID", System.Data.DbType.Int32).Value = student_id;
                sql.Parameters.Add("@DATE", System.Data.DbType.String).Value = DateTime.Now.ToString("MM.dd.yyyy");
                sql.Parameters.Add("@NOTE", System.Data.DbType.String).Value = note;
+               sql.Parameters.Add("@CAT", System.Data.DbType.String).Value = category;
                sql.ExecuteNonQuery();
 
                if (wasOpen == false)
@@ -304,7 +409,7 @@ namespace Senior_Project
           }
 
           //Update note
-          public static void UpdateNote(int note_id, string note)
+          public static void Update_Note(int note_id, string note, string category)
           {
                bool wasOpen = false;
 
@@ -315,9 +420,11 @@ namespace Senior_Project
                }
 
                SQLiteCommand sql = m_dbConnection.CreateCommand();
-               sql.CommandText = "UPDATE notes SET note = @NOTE WHERE id = @ID";
+               sql.CommandText = "UPDATE notes SET note = @NOTE, category = @CAT, date = @DATE WHERE id = @ID";
                sql.Parameters.Add("@ID", System.Data.DbType.Int32).Value = note_id;
                sql.Parameters.Add("@NOTE", System.Data.DbType.String).Value = note;
+               sql.Parameters.Add("@CAT", System.Data.DbType.String).Value = category;
+               sql.Parameters.Add("@DATE", System.Data.DbType.String).Value = DateTime.Now.ToString("MM.dd.yyyy");
                sql.ExecuteNonQuery();
 
                if (wasOpen == false)
@@ -327,7 +434,7 @@ namespace Senior_Project
           }
 
           //Query total number of notes
-          public static int QueryNumNotes()
+          public static int Query_Num_Notes()
           {
                bool wasOpen = false;
 
@@ -352,9 +459,34 @@ namespace Senior_Project
 
                return count;
           }
+          public static int Query_Num_Notes(int id)
+          {
+               bool wasOpen = false;
+
+               if (m_dbConnection.State == System.Data.ConnectionState.Closed)
+               {
+                    m_dbConnection.Open();
+                    wasOpen = true;
+               }
+
+               //Use SQL to query by reading level
+               string sql = "SELECT COUNT(id) FROM notes WHERE student_id=" + id;
+               SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+               SQLiteDataReader reader = command.ExecuteReader();
+
+               //Get returned count from reader
+               int count = Convert.ToInt32(reader[0]);
+
+               if (wasOpen == false)
+               {
+                    m_dbConnection.Close();
+               }
+
+               return count;
+          }
 
           //Query notes under a student name
-          public static List<Note> QueryNote(int id)
+          public static List<Note> Query_Note(int id)
           {
                bool wasOpen = false;
 
@@ -390,7 +522,7 @@ namespace Senior_Project
           }
 
           //Query student id from name
-          public static int QueryID(string firstname, string lastname)
+          public static int Query_ID(string firstname, string lastname)
           {
                int id;
                bool wasOpen = false;
@@ -419,7 +551,7 @@ namespace Senior_Project
           }
 
           //Delete note
-          public static void DeleteNote(int id)
+          public static void Delete_Note(int id)
           {
                bool wasOpen = false;
 
