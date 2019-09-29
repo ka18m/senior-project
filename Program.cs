@@ -9,43 +9,71 @@ namespace Senior_Project
     static class Program
     {
           /// <summary>
-          /// The main entry point for the application.
+          /// The main entry point for the application. This class' primary responsibility is controlling the initialization of the entire program.
           /// </summary>
 
-          public static int student_counter;
-          public static int note_counter;
+          [STAThread]
+          
+          /*
+          Program::Main
 
-        [STAThread]
-        static void Main()
+          NAME
+
+                    Program::Main - The main function for the application.
+
+          DESCRIPTION
+
+                    This function is the starting point for the application.  
+                    It runs the welcome form if it detects that the program has 
+                    not been run before, or the main menu if the program has 
+                    been used before.
+          */
+          static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-               string filename = "startup.txt";
-               if (!System.IO.File.Exists(filename))
+               string filename = @"\startup.txt";
+               string filepath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\HomeroomHelper\Settings";
+               string logpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\HomeroomHelper\Logs";
+
+               if (!System.IO.File.Exists(filepath + filename))
                {
-                    System.IO.File.WriteAllText(filename, "1");
+                    //Intialize folders and database
                     System.IO.Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\HomeroomHelper");
-                    Database_Interface.CreateDB();
-                    student_counter = 0;
-                    note_counter = 0;
-                    Application.Run(new Welcome_Form());
+                    System.IO.Directory.CreateDirectory(filepath);
+                    System.IO.Directory.CreateDirectory(logpath);
+                    Database_Interface.Create_DB();
+
+                    //One-time form
+                    Welcome_Form wf = new Welcome_Form();
+                    wf.ShowDialog();
+
+                    System.IO.File.WriteAllText(filepath + filename, "1");
                }
                else
                {
-                    student_counter = Database_Interface.QueryNumStudents();
-                    note_counter = Database_Interface.QueryNumNotes();
-                    Application.Run(new App());
+                    App app = new App();
+                    app.ShowDialog();
                }
 
+          }
+          /*
+          Program::Quit
 
+          NAME
 
-               //--------------------------------------------//
-               //Debug -> choose to run one form or the other |
-               //--------------------------------------------//
+                    Program::Quit - A way for the program to terminate artificially.
 
-               //Application.Run(new App());
-               //Application.Run(new App());
+          DESCRIPTION
+
+                    This function terminates the program.  Because the Program class is static, it can be called from any point in the program.
+
+          */
+          public static void Quit() //http://geekswithblogs.net/mtreadwell/archive/2004/06/06/6123.aspx
+          {
+               Application.Exit();
           }
     }
 }
+

@@ -28,37 +28,39 @@
           /// </summary>
           private void InitializeComponent()
           {
-               this.home_button = new System.Windows.Forms.Button();
+               this.Home_Button = new System.Windows.Forms.Button();
                this.notes = new System.Windows.Forms.ListView();
-               this.NoteID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-               this.StudentID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-               this.Date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-               this.Note = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-               this.student_select = new System.Windows.Forms.ComboBox();
+               this.note_id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+               this.student_id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+               this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+               this.note = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+               this.type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
                this.label1 = new System.Windows.Forms.Label();
                this.add_note = new System.Windows.Forms.Button();
                this.edit_note = new System.Windows.Forms.Button();
                this.delete_note = new System.Windows.Forms.Button();
+               this.Student_Select = new System.Windows.Forms.ComboBox();
                this.SuspendLayout();
                // 
-               // home_button
+               // Home_Button
                // 
-               this.home_button.Location = new System.Drawing.Point(13, 13);
-               this.home_button.Name = "home_button";
-               this.home_button.Size = new System.Drawing.Size(88, 31);
-               this.home_button.TabIndex = 0;
-               this.home_button.Text = "Home";
-               this.home_button.UseVisualStyleBackColor = true;
-               this.home_button.Click += new System.EventHandler(this.home_button_Click);
+               this.Home_Button.Location = new System.Drawing.Point(13, 13);
+               this.Home_Button.Name = "Home_Button";
+               this.Home_Button.Size = new System.Drawing.Size(88, 31);
+               this.Home_Button.TabIndex = 0;
+               this.Home_Button.Text = "Home";
+               this.Home_Button.UseVisualStyleBackColor = true;
+               this.Home_Button.Click += new System.EventHandler(this.Home_Button_Click);
                // 
                // notes
                // 
                this.notes.Activation = System.Windows.Forms.ItemActivation.OneClick;
                this.notes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.NoteID,
-            this.StudentID,
-            this.Date,
-            this.Note});
+            this.note_id,
+            this.student_id,
+            this.date,
+            this.note,
+            this.type});
                this.notes.FullRowSelect = true;
                this.notes.HoverSelection = true;
                this.notes.Location = new System.Drawing.Point(12, 90);
@@ -69,36 +71,30 @@
                this.notes.UseCompatibleStateImageBehavior = false;
                this.notes.View = System.Windows.Forms.View.Details;
                // 
-               // NoteID
+               // note_id
                // 
-               this.NoteID.DisplayIndex = 2;
-               this.NoteID.Text = "";
-               this.NoteID.Width = 1;
+               this.note_id.Text = "Note ID";
+               this.note_id.Width = 1;
                // 
-               // StudentID
+               // student_id
                // 
-               this.StudentID.DisplayIndex = 3;
-               this.StudentID.Width = 1;
+               this.student_id.Text = "Student ID";
+               this.student_id.Width = 1;
                // 
-               // Date
+               // date
                // 
-               this.Date.DisplayIndex = 0;
-               this.Date.Text = "Date";
+               this.date.Text = "Date";
+               this.date.Width = 78;
                // 
-               // Note
+               // note
                // 
-               this.Note.DisplayIndex = 1;
-               this.Note.Text = "Notes";
-               this.Note.Width = 385;
+               this.note.Text = "Note";
+               this.note.Width = 292;
                // 
-               // student_select
+               // type
                // 
-               this.student_select.FormattingEnabled = true;
-               this.student_select.Location = new System.Drawing.Point(107, 63);
-               this.student_select.Name = "student_select";
-               this.student_select.Size = new System.Drawing.Size(220, 21);
-               this.student_select.TabIndex = 2;
-               this.student_select.SelectedIndexChanged += new System.EventHandler(this.Student_Select_SelectedIndexChanged);
+               this.type.Text = "Type";
+               this.type.Width = 74;
                // 
                // label1
                // 
@@ -139,22 +135,31 @@
                this.delete_note.UseVisualStyleBackColor = true;
                this.delete_note.Click += new System.EventHandler(this.Delete_Note_Click);
                // 
+               // Student_Select
+               // 
+               this.Student_Select.FormattingEnabled = true;
+               this.Student_Select.Location = new System.Drawing.Point(107, 63);
+               this.Student_Select.Name = "Student_Select";
+               this.Student_Select.Size = new System.Drawing.Size(192, 21);
+               this.Student_Select.TabIndex = 7;
+               this.Student_Select.SelectedIndexChanged += new System.EventHandler(this.Student_Select_SelectedIndexChanged);
+               // 
                // Conference_Form
                // 
                this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
                this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
                this.ClientSize = new System.Drawing.Size(476, 450);
+               this.Controls.Add(this.Student_Select);
                this.Controls.Add(this.delete_note);
                this.Controls.Add(this.edit_note);
                this.Controls.Add(this.add_note);
                this.Controls.Add(this.label1);
-               this.Controls.Add(this.student_select);
                this.Controls.Add(this.notes);
-               this.Controls.Add(this.home_button);
+               this.Controls.Add(this.Home_Button);
                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
                this.MaximizeBox = false;
                this.Name = "Conference_Form";
-               this.Text = "Conference_Form";
+               this.Text = "Student Conferences";
                this.ResumeLayout(false);
                this.PerformLayout();
 
@@ -162,16 +167,17 @@
 
           #endregion
 
-          private System.Windows.Forms.Button home_button;
+          private System.Windows.Forms.Button Home_Button;
           private System.Windows.Forms.ListView notes;
-          private System.Windows.Forms.ComboBox student_select;
-          private System.Windows.Forms.ColumnHeader Date;
-          private System.Windows.Forms.ColumnHeader Note;
           private System.Windows.Forms.Label label1;
           private System.Windows.Forms.Button add_note;
           private System.Windows.Forms.Button edit_note;
           private System.Windows.Forms.Button delete_note;
-          private System.Windows.Forms.ColumnHeader NoteID;
-          private System.Windows.Forms.ColumnHeader StudentID;
+          private System.Windows.Forms.ColumnHeader note_id;
+          private System.Windows.Forms.ColumnHeader student_id;
+          private System.Windows.Forms.ColumnHeader date;
+          private System.Windows.Forms.ColumnHeader note;
+          private System.Windows.Forms.ColumnHeader type;
+          private System.Windows.Forms.ComboBox Student_Select;
      }
 }

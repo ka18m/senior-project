@@ -8,13 +8,39 @@ namespace Senior_Project //https://stackoverflow.com/questions/2907259/what-is-t
 {
      public struct Conference_Types
      {
+          /// <summary>
+          /// This structure is used to contain the different 
+          /// Student Conference types and information
+          /// so they can be called in the program.
+          /// </summary>
           private int id;
           private bool isDef;
 
+          /*
+           NAME
+
+               Conference_Types::HasValue - returns if the struct has been defined.
+
+           DESCRIPTION
+
+               This function returns whether the class has been defined or not. 
+               If an id is not specified, then the struct is not defined.
+          */
           public bool HasValue { get { return isDef; } }
 
+          /*
+           NAME
+
+               Conference_Types::Conference_Types - the constructor for the class.
+
+           DESCRIPTION
+
+               This function returns whether the class has been defined or not. 
+               If an id is not specified, then the struct is not defined.
+          */
           public Conference_Types(int value) { id = value; isDef = true; }
 
+          //Conference type property
           public string Type
           {
                get
@@ -28,8 +54,9 @@ namespace Senior_Project //https://stackoverflow.com/questions/2907259/what-is-t
                          "Unspecified"; 
 
                }
-          }
+          } 
 
+          //Information about the conference type
           public string Blurb
           {
                get
@@ -44,6 +71,7 @@ namespace Senior_Project //https://stackoverflow.com/questions/2907259/what-is-t
                }
           }
 
+          //How to use each type of conference
           public string Usage
           {
                get
@@ -58,6 +86,7 @@ namespace Senior_Project //https://stackoverflow.com/questions/2907259/what-is-t
                }
           }
 
+          //An example of this type of conference
           public string Example
           {
                get
